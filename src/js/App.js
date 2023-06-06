@@ -1,36 +1,37 @@
-import logo from '../platzi.webp';
+import React from 'react';
 import { TodoCounter } from './TodoCounter';
 import { TodoSearch } from './TodoSearch';
 import { TodoList } from './TodoList';
-import '../css/App.css';
+import { TodoItem } from './TodoItem';
+import { CreateTodoButton } from './CreateTodoButton';
+
+const defaultTodos = [
+  {id: 1, text: 'cortar cebolla', completed: false},
+  {id: 2, text: 'picar tomate', completed: true},
+  {id: 3, text: 'cortar pimenton', completed: false},
+  {id: 4, text: 'cortar ajo', completed: true},
+  {id: 5, text: 'cortar aji', completed: true}
+];
 
 function App() {
   return (
-    <div className="App">
-      
-      <TodoCounter />
+    <>
+      <TodoCounter completed={16} total={25} />
       <TodoSearch />
 
       <TodoList>
-        <TodoItem />
-        <TodoItem />
-        <TodoItem />
+        {defaultTodos.map(todo => (
+          <TodoItem 
+            key={todo.id} 
+            text={todo.text} 
+            completed={todo.completed}
+          />
+        ))}
       </TodoList>
 
-      {/* <CreateTodoButton /> */}
-
-    </div>
+      <CreateTodoButton />
+    </>
   );
 }
 
-function TodoItem(){
-  return (
-    <li>
-      <span>V</span>
-      <p>Llorar con la Llorona</p>
-      <span>X</span>
-    </li>
-  );
-}
-
-export {App};
+export default App;
