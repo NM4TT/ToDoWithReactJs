@@ -14,10 +14,27 @@ const defaultTodos = [
 ];
 
 function App() {
+
+  const [searchValue, setSearchValue]
+   = React.useState('');
+
+  const [todosList, setTodosList]
+   = React.useState(defaultTodos);
+ 
+  const completedTodos = todosList.filter(todo => !!todo.completed).length;
+  const totalTodos = todosList.length;
+
   return (
     <>
-      <TodoCounter completed={16} total={25} />
-      <TodoSearch />
+      <TodoCounter 
+        completed={completedTodos} 
+        total={totalTodos} 
+      />
+
+      <TodoSearch 
+        searchState={searchValue} 
+        setSearchState={setSearchValue}
+      />
 
       <TodoList>
         {defaultTodos.map(todo => (
@@ -29,7 +46,7 @@ function App() {
         ))}
       </TodoList>
 
-      <CreateTodoButton />
+      <CreateTodoButton addTodo={setTodosList}/>
     </>
   );
 }
