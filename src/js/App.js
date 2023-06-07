@@ -32,9 +32,6 @@ function App() {
     }
   );
 
-  //Por alguna razon al filtrar en deleteTodo(id)
-  //js toma el index real del array y no el id manual
-  //tuve que calcular el index
   function completeTodo(id) {
       const newTodos = [...todosList];
       const todoIndex = newTodos.findIndex(todo => todo.id == id);
