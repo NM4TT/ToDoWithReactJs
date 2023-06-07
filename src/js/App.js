@@ -10,7 +10,7 @@ const defaultTodos = [
   {id: 2, text: 'picar tomate', completed: true},
   {id: 3, text: 'cortar pimenton', completed: false},
   {id: 4, text: 'cortar ajo', completed: true},
-  {id: 5, text: 'cortar aji', completed: true}
+  {id: 5, text: 'CORTAR', completed: true}
 ];
 
 function App() {
@@ -23,6 +23,14 @@ function App() {
  
   const completedTodos = todosList.filter(todo => !!todo.completed).length;
   const totalTodos = todosList.length;
+
+  const searchedTodos = todosList.filter(
+    (todo) => {
+      const todoText = todo.text.toLowerCase();
+      const searchText = searchValue.toLowerCase();
+      return todoText.includes(searchText);
+    }
+  );
 
   return (
     <>
@@ -37,7 +45,7 @@ function App() {
       />
 
       <TodoList>
-        {defaultTodos.map(todo => (
+        {searchedTodos.map(todo => (
           <TodoItem 
             key={todo.id} 
             text={todo.text} 
