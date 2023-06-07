@@ -32,14 +32,20 @@ function App() {
     }
   );
 
+  //Por alguna razon al filtrar en deleteTodo(id)
+  //js toma el index real del array y no el id manual
+  //tuve que calcular el index
   function completeTodo(id) {
       const newTodos = [...todosList];
-      newTodos[id].completed = !newTodos[id].completed;
+      const todoIndex = newTodos.findIndex(todo => todo.id == id);
+      console.log('id manual: ' + id + '\n' + 'id js: ' + todoIndex);
+      newTodos[todoIndex].completed = !newTodos[todoIndex].completed;
       setTodosList(newTodos);
   }
 
   function deleteTodo(id) {
-    setTodosList(todosList.filter(todo => todo.id != id));
+    const newTodos = [...todosList];
+    setTodosList(newTodos.filter(todo => todo.id != id));
   }
 
   return (
