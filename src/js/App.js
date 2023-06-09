@@ -5,21 +5,25 @@ import { TodoList } from './TodoList';
 import { TodoItem } from './TodoItem';
 import { CreateTodoButton } from './CreateTodoButton';
 
-const defaultTodos = [
-  {id: 0, text: 'cortar cebolla', completed: false},
-  {id: 1, text: 'picar tomate', completed: true},
-  {id: 2, text: 'cortar pimenton', completed: false},
-  {id: 3, text: 'cortar ajo', completed: true},
-  {id: 4, text: 'CORTAR', completed: true}
-];
-
 function App() {
 
+  const localStorageTodos = localStorage.getItem('TODOS_V1');
+  let parsedTodos;
+
+  //if null, if empty, any falsy JS value
+  if (!localStorageTodos) {
+    parsedTodos = [];
+    localStorage
+      .setItem('TODOS_V1', JSON.stringify(parsedTodos));
+  } else {
+    parsedTodos = JSON.parse(localStorageTodos);
+  }
+  
   const [searchValue, setSearchValue]
    = React.useState('');
 
   const [todosList, setTodosList]
-   = React.useState(defaultTodos);
+   = React.useState(parsedTodos);
  
   const completedTodos = todosList.filter(todo => !!todo.completed).length;
   const totalTodos = todosList.length;
@@ -32,17 +36,21 @@ function App() {
     }
   );
 
+  function updateTodos(newTodos) {
+    localStorage.setItem('TODOS_V1', JSON.stringify(newTodos));
+    setTodosList(newTodos);
+  }
+
   function completeTodo(id) {
       const newTodos = [...todosList];
-      const todoIndex = newTodos.findIndex(todo => todo.id == id);
-      console.log('id manual: ' + id + '\n' + 'id js: ' + todoIndex);
+      const todoIndex = newTodos.findIndex(todo => todo.id === id);
       newTodos[todoIndex].completed = !newTodos[todoIndex].completed;
-      setTodosList(newTodos);
+      updateTodos(newTodos);
   }
 
   function deleteTodo(id) {
     const newTodos = [...todosList];
-    setTodosList(newTodos.filter(todo => todo.id != id));
+    updateTodos(newTodos.filter(todo => todo.id !== id));
   }
 
   return (
