@@ -5,25 +5,36 @@ import { TodoList } from './TodoList';
 import { TodoItem } from './TodoItem';
 import { CreateTodoButton } from './CreateTodoButton';
 
-function App() {
+function useLocalStorage(itemName, initialValue){
 
-  const localStorageTodos = localStorage.getItem('TODOS_V1');
-  let parsedTodos;
+  const localStorageItem  = localStorage.getItem(itemName);
+  let parsedItem;
 
   //if null, if empty, any falsy JS value
-  if (!localStorageTodos) {
-    parsedTodos = [];
+  if (!localStorageItem) {
+    parsedItem = initialValue;
     localStorage
-      .setItem('TODOS_V1', JSON.stringify(parsedTodos));
+      .setItem(itemName, JSON.stringify(initialValue));
   } else {
-    parsedTodos = JSON.parse(localStorageTodos);
+    parsedItem = JSON.parse(localStorageItem);
   }
+
+  const [item, setItem] = React.useState(parsedItem);
+
+  function saveItem(newItem) {
+    localStorage.setItem(itemName, JSON.stringify(newItem));
+    setItem(newItem);
+  }
+  return [item,saveItem]; //return as array
+}
+
+function App() {
   
   const [searchValue, setSearchValue]
    = React.useState('');
 
-  const [todosList, setTodosList]
-   = React.useState(parsedTodos);
+  const [todosList, saveTodos]
+   = useLocalStorage('TODOS_V1', []);
  
   const completedTodos = todosList.filter(todo => !!todo.completed).length;
   const totalTodos = todosList.length;
@@ -36,21 +47,16 @@ function App() {
     }
   );
 
-  function updateTodos(newTodos) {
-    localStorage.setItem('TODOS_V1', JSON.stringify(newTodos));
-    setTodosList(newTodos);
-  }
-
   function completeTodo(id) {
       const newTodos = [...todosList];
       const todoIndex = newTodos.findIndex(todo => todo.id === id);
       newTodos[todoIndex].completed = !newTodos[todoIndex].completed;
-      updateTodos(newTodos);
+      saveTodos(newTodos);
   }
 
   function deleteTodo(id) {
     const newTodos = [...todosList];
-    updateTodos(newTodos.filter(todo => todo.id !== id));
+    saveTodos(newTodos.filter(todo => todo.id !== id));
   }
 
   return (
@@ -77,7 +83,7 @@ function App() {
         ))}
       </TodoList>
 
-      <CreateTodoButton addTodo={setTodosList}/>
+      <CreateTodoButton addTodo={saveTodos}/>
     </>
   );
 }
