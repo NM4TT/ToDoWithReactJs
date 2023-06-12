@@ -5,6 +5,9 @@ import { TodoList } from './TodoList';
 import { TodoItem } from './TodoItem';
 import { CreateTodoButton } from './CreateTodoButton';
 import { useLocalStorage } from './useLocalStorage';
+import { TodosLoading } from './TodosLoading';
+import { TodosError } from './TodosError.js';
+import { EmptyTodos } from './EmptyTodos.js';
 
 function App() {
   
@@ -50,10 +53,10 @@ function App() {
       />
 
       <TodoList>
-        {loading && <p>Estamos cargando...</p>}
-        {error && <p>Desesperacion...</p>}
+        {loading && <TodosLoading/>}
+        {error && <TodosError/>}
         {(!loading && searchedTodos.length === 0)
-          && <p>Crea tu primer TODO</p>}
+          && <EmptyTodos/>}
 
         {searchedTodos.map(todo => (
           <TodoItem 
