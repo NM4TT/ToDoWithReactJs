@@ -4,37 +4,15 @@ import { TodoSearch } from './TodoSearch';
 import { TodoList } from './TodoList';
 import { TodoItem } from './TodoItem';
 import { CreateTodoButton } from './CreateTodoButton';
-
-function useLocalStorage(itemName, initialValue){
-
-  const localStorageItem  = localStorage.getItem(itemName);
-  let parsedItem;
-
-  //if null, if empty, any falsy JS value
-  if (!localStorageItem) {
-    parsedItem = initialValue;
-    localStorage
-      .setItem(itemName, JSON.stringify(initialValue));
-  } else {
-    parsedItem = JSON.parse(localStorageItem);
-  }
-
-  const [item, setItem] = React.useState(parsedItem);
-
-  function saveItem(newItem) {
-    localStorage.setItem(itemName, JSON.stringify(newItem));
-    setItem(newItem);
-  }
-  return [item,saveItem]; //return as array
-}
+import { useLocalStorage } from './useLocalStorage';
 
 function App() {
   
   const [searchValue, setSearchValue]
    = React.useState('');
 
-  const [todosList, saveTodos]
-   = useLocalStorage('TODOS_V1', []);
+  const {item: todosList, saveItem: saveTodos,
+    loading, error} = useLocalStorage('TODOS_V1', []);
  
   const completedTodos = todosList.filter(todo => !!todo.completed).length;
   const totalTodos = todosList.length;
@@ -72,6 +50,11 @@ function App() {
       />
 
       <TodoList>
+        {loading && <p>Estamos cargando...</p>}
+        {error && <p>Desesperacion...</p>}
+        {(!loading && searchedTodos.length === 0)
+          && <p>Crea tu primer TODO</p>}
+
         {searchedTodos.map(todo => (
           <TodoItem 
             key={todo.id} 
