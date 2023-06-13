@@ -7,47 +7,52 @@ import { CreateTodoButton } from './CreateTodoButton';
 import { TodosLoading } from './TodosLoading';
 import { TodosError } from './TodosError.js';
 import { EmptyTodos } from './EmptyTodos.js';
-import { TodoProvider } from './TodoContext';
+import { Modal } from './Modal';
 import { TodoContext } from './TodoContext';
 
 function App() {
+  
+  const {
+    loading,
+    error,
+    searchedTodos,
+    completeTodo,
+    deleteTodo,
+    openModal,
+    addNewTodo
+  } = React.useContext(TodoContext);
 
   return (
     <>
-      <TodoProvider>
-        <TodoCounter />
+      <TodoCounter />
 
-        <TodoSearch />
+      <TodoSearch />
 
-        <TodoContext.Consumer>
-          {({
-            loading,
-            error,
-            searchedTodos,
-            completeTodo,
-            deleteTodo
-          }) => (
-            <TodoList>
-            {loading && <TodosLoading/>}
-            {error && <TodosError/>}
-            {(!loading && searchedTodos.length === 0)
-              && <EmptyTodos/>}
+        <TodoList>
+          {loading && <TodosLoading/>}
+          {error && <TodosError/>}
+          {(!loading && searchedTodos.length === 0)
+            && <EmptyTodos/>}
 
-            {searchedTodos.map(todo => (
-              <TodoItem 
-                key={todo.id} 
-                text={todo.text} 
-                completed={todo.completed}
-                onComplete={() => completeTodo(todo.id)}
-                onDelete={() => deleteTodo(todo.id)}
-              />
-            ))}
-          </TodoList>
-          )}
-        </TodoContext.Consumer>
+          {searchedTodos.map(todo => (
+            <TodoItem 
+              key={todo.id} 
+              text={todo.text} 
+              completed={todo.completed}
+              onComplete={() => completeTodo(todo.id)}
+              onDelete={() => deleteTodo(todo.id)}
+            />
+          ))}
+        </TodoList>
 
-        <CreateTodoButton />
-      </TodoProvider>
+        <CreateTodoButton onAdd = {() => addNewTodo()}/>
+
+        {openModal && (
+          <Modal>
+            Prueba
+          </Modal>
+        )}
+
     </>
   );
 }
