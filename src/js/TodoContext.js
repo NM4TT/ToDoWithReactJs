@@ -13,6 +13,8 @@ function TodoProvider({children}) {
   
    const [openModal, setOpenModal]
     = React.useState(false);
+  
+   const [emptyTodo, setEmptyTodo] = React.useState(false);
    
    const completedTodos = todosList.filter(todo => !!todo.completed).length;
    const totalTodos = todosList.length;
@@ -37,8 +39,16 @@ function TodoProvider({children}) {
      saveTodos(newTodos.filter(todo => todo.id !== id));
    }
 
-   function addNewTodo() {
-      setOpenModal(!openModal);
+   function addNewTodo(text) {
+      if (!text) {
+        setEmptyTodo(true);
+      } else {
+        const newTodos = [...todosList];
+        let index = newTodos.length;
+        newTodos.push({id: index, text: text, completed: false});
+        saveTodos(newTodos);
+        setOpenModal(false);
+      }
    }
     
     return (
@@ -57,7 +67,9 @@ function TodoProvider({children}) {
                 openModal,
                 setOpenModal,
                 loading,
-                addNewTodo
+                addNewTodo,
+                setEmptyTodo,
+                emptyTodo
             }}
         >
             {children}

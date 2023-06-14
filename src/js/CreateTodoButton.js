@@ -1,12 +1,11 @@
 import React from 'react'
 import '../css/CreateTodoButton.css'
-// import { TodoContext } from './TodoContext';
 
-function CreateTodoButton({onAdd}) {
+function CreateTodoButton({onClick}) {
 
   return (
     <button className="CreateTodoButton"
-     onClick={onAdd} >
+     onClick={ () => onClick(state => !state)} >
       +
     </button>
   );

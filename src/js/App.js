@@ -8,6 +8,7 @@ import { TodosLoading } from './TodosLoading';
 import { TodosError } from './TodosError.js';
 import { EmptyTodos } from './EmptyTodos.js';
 import { Modal } from './Modal';
+import { TodoForm } from './TodoForm';
 import { TodoContext } from './TodoContext';
 
 function App() {
@@ -19,7 +20,7 @@ function App() {
     completeTodo,
     deleteTodo,
     openModal,
-    addNewTodo
+    setOpenModal
   } = React.useContext(TodoContext);
 
   return (
@@ -45,11 +46,11 @@ function App() {
           ))}
         </TodoList>
 
-        <CreateTodoButton onAdd = {() => addNewTodo()}/>
+        <CreateTodoButton onClick = {setOpenModal}/>
 
         {openModal && (
           <Modal>
-            Prueba
+            <TodoForm />
           </Modal>
         )}
 
